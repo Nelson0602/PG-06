@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="760.0" prefWidth="1280.0"
+            styleClass="root-pane"
+            stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.MainController">
+
+    <!-- ═══════ HEADER ═══════ -->
+    <top>
+        <VBox alignment="CENTER_LEFT" prefHeight="70.0" styleClass="header-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="12.0" left="28.0" right="28.0" top="12.0"/>
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                    <children>
+                        <Label styleClass="header-badge" text="PG-05"/>
+                        <Label styleClass="header-title" text="Árboles Binarios (simples, búsqueda binaria y balanceados) en JavaFx">
+                            <font><Font size="20.0"/></font>
+                        </Label>
+                    </children>
+                </HBox>
+                <Label styleClass="header-sub"
+                       text="IF-3001 · Algoritmos y Estructuras de Datos | Prof. Lic. Gilberth Chaves Avila · Grupo 21">
+                    <font><Font size="11.0"/></font>
+                </Label>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- ═══════ CENTER: TabPane con 3 tabs ═══════ -->
+    <center>
+        <TabPane fx:id="mainTabPane" styleClass="main-tabs" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+
+                <!-- ─────── TAB 1: Árbol Binario Simple ─────── -->
+                <Tab text="Árbol Binario Simple">
+                    <content>
+                        <SplitPane dividerPositions="0.22" orientation="HORIZONTAL">
+
+                            <!-- Panel izquierdo: controles -->
+                            <VBox spacing="10" styleClass="side-panel">
+                                <padding><Insets top="16" right="14" bottom="16" left="14"/></padding>
+
+                                <Label styleClass="panel-title" text="Árbol Binario Simple"/>
+                                <Label styleClass="panel-sub" text="Inserción por niveles (BFS)"/>
+                                <Separator/>
+
+                                <Label text="Valor (entero):"/>
+                                <TextField fx:id="btreeInput" promptText="Ej: 42"/>
+
+                                <Button fx:id="btreeInsertBtn" text="+ Insertar"
+                                        styleClass="btn-insert" maxWidth="Infinity"
+                                        onAction="#onBTreeInsert"/>
+                                <Button fx:id="btreeRemoveBtn" text="✕ Eliminar"
+                                        styleClass="btn-remove" maxWidth="Infinity"
+                                        onAction="#onBTreeRemove"/>
+                                <Button fx:id="btreeClearBtn" text="🗑 Limpiar árbol"
+                                        styleClass="btn-clear" maxWidth="Infinity"
+                                        onAction="#onBTreeClear"/>
+
+                                <Separator/>
+
+                                <Label text="Recorrido:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="btreeTraversalCombo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <Button text="▶" styleClass="btn-run"
+                                            onAction="#onBTreeTraversal"/>
+                                </HBox>
+                                <TextArea fx:id="btreeTraversalOutput" prefRowCount="4"
+                                          editable="false" wrapText="true"
+                                          styleClass="output-area"/>
+
+                                <Separator/>
+                                <Label fx:id="btreeStatsLabel" text="Nodos: 0  |  Altura: 0"
+                                       styleClass="stats-label"/>
+                                <Label fx:id="btreeStatusLabel" text="" styleClass="status-label" wrapText="true"/>
+
+                                <Separator/>
+                                <Label styleClass="legend-title" text="Leyenda de colores:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-root" text="●"/>
+                                    <Label text="Raíz"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-leaf" text="●"/>
+                                    <Label text="Hoja"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-internal" text="●"/>
+                                    <Label text="Nodo interno"/>
+                                </HBox>
+
+                                <VBox.margin><Insets/></VBox.margin>
+                            </VBox>
+
+                            <!-- Panel derecho: Canvas -->
+                            <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="canvas-scroll">
+                                <content>
+                                    <Pane>
+                                        <Canvas fx:id="btreeCanvas" width="980" height="680"/>
+                                    </Pane>
+                                </content>
+                            </ScrollPane>
+
+                        </SplitPane>
+                    </content>
+                </Tab>
+
+                <!-- ─────── TAB 2: BST — Búsqueda Binaria ─────── -->
+                <Tab text="BST — Búsqueda Binaria">
+                    <content>
+                        <SplitPane dividerPositions="0.22" orientation="HORIZONTAL">
+
+                            <VBox spacing="10" styleClass="side-panel">
+                                <padding><Insets top="16" right="14" bottom="16" left="14"/></padding>
+
+                                <Label styleClass="panel-title" text="Árbol Binario de Búsqueda"/>
+                                <Label styleClass="panel-sub" text="Izq &lt; Nodo &lt; Der — O(log n) promedio"/>
+                                <Separator/>
+
+                                <Label text="Valor (entero):"/>
+                                <TextField fx:id="bstInput" promptText="Ej: 25"/>
+
+                                <Button text="+ Insertar" styleClass="btn-insert" maxWidth="Infinity"
+                                        onAction="#onBSTInsert"/>
+                                <Button text="🔍 Buscar (animar camino)" styleClass="btn-search" maxWidth="Infinity"
+                                        onAction="#onBSTSearch"/>
+                                <Button text="✕ Eliminar" styleClass="btn-remove" maxWidth="Infinity"
+                                        onAction="#onBSTRemove"/>
+                                <Button text="🗑 Limpiar árbol" styleClass="btn-clear" maxWidth="Infinity"
+                                        onAction="#onBSTClear"/>
+
+                                <Separator/>
+
+                                <Label text="Recorrido:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="bstTraversalCombo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <Button text="▶" styleClass="btn-run"
+                                            onAction="#onBSTTraversal"/>
+                                </HBox>
+                                <TextArea fx:id="bstTraversalOutput" prefRowCount="4"
+                                          editable="false" wrapText="true"
+                                          styleClass="output-area"/>
+
+                                <Separator/>
+                                <Label fx:id="bstStatsLabel" text="Nodos: 0  |  Altura: 0  |  BST válido"
+                                       styleClass="stats-label"/>
+                                <Label fx:id="bstStatusLabel" text="" styleClass="status-label" wrapText="true"/>
+
+                                <Separator/>
+                                <Label styleClass="legend-title" text="Leyenda:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-root" text="●"/><Label text="Raíz"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-search" text="●"/><Label text="Camino de búsqueda"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-found" text="●"/><Label text="Nodo encontrado"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-leaf" text="●"/><Label text="Hoja"/>
+                                </HBox>
+
+                            </VBox>
+
+                            <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="canvas-scroll">
+                                <content>
+                                    <Pane>
+                                        <Canvas fx:id="bstCanvas" width="980" height="680"/>
+                                    </Pane>
+                                </content>
+                            </ScrollPane>
+
+                        </SplitPane>
+                    </content>
+                </Tab>
+
+                <!-- ─────── TAB 3: AVL — Balanceado ─────── -->
+                <Tab text="AVL — Balanceado">
+                    <content>
+                        <SplitPane dividerPositions="0.22" orientation="HORIZONTAL">
+
+                            <VBox spacing="10" styleClass="side-panel">
+                                <padding><Insets top="16" right="14" bottom="16" left="14"/></padding>
+
+                                <Label styleClass="panel-title" text="Árbol AVL"/>
+                                <Label styleClass="panel-sub" text="BST auto-balanceado — O(log n) garantizado"/>
+                                <Separator/>
+
+                                <Label text="Valor (entero):"/>
+                                <TextField fx:id="avlInput" promptText="Ej: 35"/>
+
+                                <Button text="+ Insertar" styleClass="btn-insert" maxWidth="Infinity"
+                                        onAction="#onAVLInsert"/>
+                                <Button text="🔍 Buscar" styleClass="btn-search" maxWidth="Infinity"
+                                        onAction="#onAVLSearch"/>
+                                <Button text="✕ Eliminar" styleClass="btn-remove" maxWidth="Infinity"
+                                        onAction="#onAVLRemove"/>
+                                <Button text="🗑 Limpiar árbol" styleClass="btn-clear" maxWidth="Infinity"
+                                        onAction="#onAVLClear"/>
+
+                                <Separator/>
+
+                                <Label fx:id="avlRotationLabel" text="Última rotación aplicada:"
+                                       styleClass="rotation-label" wrapText="true"/>
+
+                                <Separator/>
+
+                                <Label text="Recorrido:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="avlTraversalCombo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <Button text="▶" styleClass="btn-run"
+                                            onAction="#onAVLTraversal"/>
+                                </HBox>
+                                <TextArea fx:id="avlTraversalOutput" prefRowCount="4"
+                                          editable="false" wrapText="true"
+                                          styleClass="output-area"/>
+
+                                <Separator/>
+                                <Label fx:id="avlStatsLabel" text="Nodos: 0  |  Altura: 0  |  Balanceado..."
+                                       styleClass="stats-label"/>
+                                <Label fx:id="avlStatusLabel" text="" styleClass="status-label" wrapText="true"/>
+
+                                <Separator/>
+                                <Label styleClass="legend-title" text="Leyenda FE:"/>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-root" text="●"/><Label text="Raíz"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-leaf" text="●"/><Label text="FE = 0 (perfecto)"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-internal" text="●"/><Label text="FE = ±1 (aceptable)"/>
+                                </HBox>
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label styleClass="dot-unbalanced" text="●"/><Label text="FE = ±2 (rotar ⚠)"/>
+                                </HBox>
+
+                            </VBox>
+
+                            <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="canvas-scroll">
+                                <content>
+                                    <Pane>
+                                        <Canvas fx:id="avlCanvas" width="980" height="680"/>
+                                    </Pane>
+                                </content>
+                            </ScrollPane>
+
+                        </SplitPane>
+                    </content>
+                </Tab>
+
+            </tabs>
+        </TabPane>
+    </center>
+
+</BorderPane>
