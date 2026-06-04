@@ -24,6 +24,17 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
         return !directed ? getVertexA && getVertexB : getVertexA;
     }
 
+    private Node<T> getNodeNeigbor(Node<T> headnode, T element) {
+        if(headnode== null) return null;
+        Node<T> aux = headnode;
+        while (aux != null) {
+            if(aux.data.compareTo(element) == 0) return aux;
+            aux = aux.neighbor; //Movemos aux al siguiente nodo vecino
+            
+        }
+        return null;//Si llega aqui, no enfontró el nodo
+    }
+
     @Override
     public void addEdge(Comparable a, Comparable b) throws GraphException, ListException {
         if (!containsVertex(a) || !containsVertex(b))
@@ -89,5 +100,28 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
     @Override
     public String bfs() throws GraphException, QueueException, ListException {
         return super.bfs();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Adjacency Matrix Graph: \n");
+        String typeGraph = directed ? "Directed" : "Undirected";
+        sb.append(" Graph Type: ").append(typeGraph).append("\n");
+        //mostramos todos los vertices
+        for (int i = 0; i < n; i++) {
+            sb.append("\nThe vertex in position: [").append(i)
+                    .append("] is: ").append(vertexList[i].data);
+        }
+        //mostramos la informacion de aristas y pesos
+        for(int i = 0; i< counter; i++){
+            sb.append("\n( ").append(i).append(" )----Vertex [ ").append(getVertexByIndex(i).data).append(" ]");
+            Node<T> aux = getVertexByIndex(i).headnode;
+            while (aux != null) {
+                sb.append("\n Edge: ").append(aux.data).append(" weight:").append(aux.weight);
+                aux = aux.neighbor;//Lo movemos al siguiente nodo vecino
+            }
+        }
+        return sb.toString(); //
     }
 }

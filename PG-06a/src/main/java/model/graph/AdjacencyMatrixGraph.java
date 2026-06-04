@@ -290,4 +290,12 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
         }//for i
         return -1;
     }
+
+    public Vertex<T> getVertexByIndex(int index) {
+        for (int i = 0; i < counter; i++) {
+            if (i == index) return this.vertexList[i];
+
+        }
+        return null;
+    }
 }
