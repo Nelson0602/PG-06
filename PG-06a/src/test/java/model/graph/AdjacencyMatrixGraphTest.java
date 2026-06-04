@@ -24,6 +24,10 @@ class AdjacencyMatrixGraphTest {
             graph.addEdgeAndWeight(2,5, new Random().nextInt(5,30));
             graph.addEdgeAndWeight(3,4, new Random().nextInt(5,30));
             graph.addEdgeAndWeight(4,5, new Random().nextInt(5,30));
+
+            //eliminemos algunos vertices
+            System.out.println("Remove vertex: 1");
+            graph.removeVertex(1);
     }catch (GraphException | ListException e) {
             throw new RuntimeException(e);
     }

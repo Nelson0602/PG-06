@@ -117,6 +117,28 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>>implements Graph<T> {
             for(int i = index; i < counter-1; i++){
                 vertexList[i] = vertexList[i+1];
 
+                //ahora hacemos lo mismo en la amtriz con las filas, columnas
+                //Es decir, eliminamos las aristas
+                //primero movemos todas las filas, una pos hacia arriba
+                for(int j = 0; j< counter; j++){
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i+1][j];
+                }
+            }
+            //luego movemos todas las columnas una posicion a la izquierda
+            for ( int i = 0; i < counter; i++){
+                for( int j = index; j < counter-1; j++){
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i][j+1];
+                }
+            }
+            //al final se debe decrementar el contador de vertices existente
+            //eliminamos los datos "sucios" de la lista de vertices y la matriz
+            vertexList[counter] = null;
+            counter--;
+            for (int i = 0; i < counter; i++) {
+                //Cambia las filas y las columnas es la ultima(columna "sucia")
+                adjacencyMatrix[i][counter] = (T) Integer.valueOf(0);
+                //cambia las cols y las filas en la ultima(fila "sucia")
+                adjacencyMatrix[counter][i] = (T) Integer.valueOf(0);
             }
         }
     }
@@ -124,6 +146,17 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>>implements Graph<T> {
     @Override
     public void removeEdge(T a, T b) throws GraphException, ListException {
 
+    }
+
+    public String printMatriz(){
+        String result = "";
+        for (int i = 0; i < counter; i++) {
+            for (int j = 0; j < counter; j++) {
+                result += adjacencyMatrix[i][j] + " ";
+            }
+            result += "\n";
+        }
+        return result;
     }
 
     @Override
