@@ -13,7 +13,15 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
 
     @Override
     public boolean containsEdge(Comparable a, Comparable b) throws GraphException, ListException {
-        return super.containsEdge(a, b);
+        boolean getVertexA = false;
+        boolean getVertexB = false;
+        Vertex<T> vertexA = getVertex(a);
+        getVertexA = getNodeNeigbor(vertexA.headnode, b) != null;
+        if(!directed) {
+            Vertex<T> vertexB = getVertex(b);
+            getVertexB = getNodeNeigbor(vertexB.headnode, a) != null;
+        }
+        return !directed ? getVertexA && getVertexB : getVertexA;
     }
 
     @Override
