@@ -79,7 +79,16 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
 
     @Override
     public void addEdgeAndWeight(Comparable a, Comparable b, Comparable weight) throws GraphException, ListException {
-        super.addEdgeAndWeight(a, b, weight);
+        if (!containsVertex(a) || !containsVertex(b))
+            throw new GraphException("Adjacency Matrix Graph Not Contains Vertex");
+        if (!containsEdge(a, b)) {
+            Vertex<T> vertexA = getVertex(a);
+            vertexA.headnode = addNeighbor(vertexA.headnode, b, weight);
+            if(!directed){
+                Vertex<T> vertexB = getVertex(b);
+                Vertex<T> vertexB = addNeighbor(vertexB.headnode, a, null);
+            }
+        }
     }
 
     @Override
