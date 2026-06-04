@@ -56,7 +56,7 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
             else{
                 Node<T> aux = headNode;
                 //Me muevo por la lista hasta el ultimo nodo
-                while(aux.neighbor != null)
+                while(aux != null)
                     aux = aux.neighbor; //Se mueve al siguiente nodo vecino
                     //se sale cuando auxiliar.neigbor es  nulo
                 aux.neighbor = node; //Entonces conectamos el nodo al final
