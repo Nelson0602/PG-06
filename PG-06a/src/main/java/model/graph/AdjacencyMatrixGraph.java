@@ -12,7 +12,7 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
     public Vertex<T>[] vertexList; //arreglpo estatico de objeto tipo vertex
     private T[][] adjacencyMatrix; //arreglo multidimensional tipo matriz
     public int counter; //contador de vertices agregados
-    private boolean directed; //true si el grafo es dirigido
+    public boolean directed; //true si el grafo es dirigido
 
     //atributos para los recorridos dfs y bfs
     public LinkedStack<Integer> stack;
