@@ -7,6 +7,12 @@ public class LinkedQueue<T> implements MyQueue<T> {
     private Node<T> rear;
     private int size;
 
+    public LinkedQueue() {
+        this.front = null;
+        this.rear = null;
+        this.size = 0;
+    }
+
     public LinkedQueue(int capacity) {
         this.front = null;
         this.rear = null;
