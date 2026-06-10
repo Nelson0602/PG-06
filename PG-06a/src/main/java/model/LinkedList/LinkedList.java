@@ -243,14 +243,15 @@ public class LinkedList <T> implements List<T> {
         return sb.toString();
     }
 
-    public Node<T> getNodeByIndex(int index) throws ListException{
-        if(isEmpty()){
-            throw new ListException("Linked list is empty");
+
+    public Node<T> getNodeByIndex(int index) throws ListException {
+        if(isEmpty()) {
+            throw new ListException("Linked List is empty");
         }
         Node<T> aux = head;
-        int pos = 1;
-        while(aux != null){
-            if (pos == index) return aux;
+        int pos = 1; //la posición del primer nodo
+        while(aux!=null){
+            if(pos==index) return aux;
             aux = aux.next;
             pos++;
         }
