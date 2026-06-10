@@ -2,7 +2,7 @@ package model;
 
 public class Node<T> {
     public T data;
-    public Object weight;//este stributo sirve para guardar el peso de las aristas en grafos
+    public Object weight;//este atributo sirve para guardar el peso de las aristas en grafos
     public Integer priority; //1=alta, 2=media, 3=baja
     public Node<T> next;
     public Node<T> prev;
@@ -17,9 +17,8 @@ public class Node<T> {
     }
     //Constructor sobrecargado
     public Node(){
-        this.next = this.next = null;
+        this.next = this.prev = null;
     }
-
 
     public Node(T data, Integer priority) {
         this.data = data;
@@ -27,7 +26,7 @@ public class Node<T> {
         this.next = null;
     }
 
-    public Node<T>(T element, Object weight) {
+    public Node(T element, Object weight) {
         this.data = element;
         this.weight = weight;
         this.neighbor = null;
