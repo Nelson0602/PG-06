@@ -258,6 +258,16 @@ public class LinkedList <T> implements List<T> {
         return null;
     }
 
+    public Node<T> getNode(T element) throws ListException {
+        if(isEmpty()) throw new ListException("Linked List is empty");
+        Node<T> aux = head;
+        while(aux != null){
+            if(equals(aux.data, element)) return aux;
+            aux = aux.next;
+        }
+        return null;
+    }
+
     private boolean equals (T a, T b){
         return  a == null ? b == null : a.equals(b);
     }

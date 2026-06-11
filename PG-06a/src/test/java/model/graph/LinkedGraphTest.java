@@ -9,13 +9,13 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AdjacencyListGraphTest {
+class LinkedGraphTest {
 
     @Test
-    void testAdjacencyListGraph() {
-        AdjacencyListGraph<Integer> graph = new AdjacencyListGraph<>(10, false);
+    void testLinkedGraphTest() {
+        LinkedGraph<Integer> graph = new LinkedGraph<>(true);
         try {
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 10; i++) {
                 graph.addVertex(i);
             }
             graph.addEdgeAndWeight(1, 2, new Random().nextInt(5, 30));
@@ -24,30 +24,17 @@ class AdjacencyListGraphTest {
             graph.addEdgeAndWeight(2, 5, new Random().nextInt(5, 30));
             graph.addEdgeAndWeight(3, 4, new Random().nextInt(5, 30));
             graph.addEdgeAndWeight(4, 5, new Random().nextInt(5, 30));
+            graph.addEdgeAndWeight(6, 7, new Random().nextInt(5, 30));
             System.out.println(graph);
-            System.out.println("DFS Transversal Tour: " + graph.dfs());
-            System.out.println("BFS Transversal Tour: " + graph.bfs());
-
-            System.out.println("Remove vertex: 1");
+            System.out.println("DFS: " + graph.dfs());
+            System.out.println("BFS: " + graph.bfs());
+            System.out.println("Remove Vertex: 1");
             graph.removeVertex(1);
-            System.out.println("Remove vertex: 2");
+            System.out.println("Remove Vertex: 2");
             graph.removeVertex(2);
-            System.out.println("Remove vertex: 3");
+            System.out.println("Remove Vertex: 3");
             graph.removeVertex(3);
             System.out.println(graph);
-
-            graph.addVertex(6); graph.addVertex(7);
-            graph.addEdgeAndWeight(4, 7, new Random().nextInt(5, 30));
-            graph.addEdgeAndWeight(5, 6, new Random().nextInt(5, 30));
-            System.out.println(graph.printMatrix());
-            System.out.println();
-            System.out.println(graph);
-
-            System.out.println("\nRemove edge: 4--5");
-            graph.removeEdge(4, 5);
-            System.out.println("Remove edge: 5--6");
-            graph.removeEdge(5, 6);
-
         } catch (GraphException | ListException | StackException | QueueException e) {
             throw new RuntimeException(e);
         }

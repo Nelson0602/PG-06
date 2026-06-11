@@ -47,6 +47,9 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
                 Vertex<T> vertexB = getVertex(b);
                 vertexB.headNode = addNeighbor(vertexB.headNode, a, null);
             }
+            // llenar la matriz del padre para que dfs/bfs/printMatrix funcionen
+            adjacencyMatrix[indexOf(a)][indexOf(b)] = (T) Integer.valueOf(1);
+            if(!directed) adjacencyMatrix[indexOf(b)][indexOf(a)] = (T) Integer.valueOf(1);
         }
     }
 
@@ -96,6 +99,9 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
                 Vertex<T> vertexB = getVertex(b);
                 vertexB.headNode = addNeighbor(vertexB.headNode, a, weight);
             }
+            // llenar la matriz del padre para que dfs/bfs/printMatrix funcionen
+            adjacencyMatrix[indexOf(a)][indexOf(b)] = weight;
+            if(!directed) adjacencyMatrix[indexOf(b)][indexOf(a)] = weight;
         }
     }
 
@@ -105,11 +111,28 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
             throw new GraphException("Adjacency List Graph Not Contains Vertex");
         int index = indexOf(element);
         if(index != -1) {
-            for (int i = index; i < counter - 1; i++)
+            // paso 1: mover filas hacia arriba (todas las columnas)
+            for (int i = index; i < counter - 1; i++) {
                 vertexList[i] = vertexList[i + 1];
-            vertexList[counter - 1] = null;
+                for (int j = 0; j < counter; j++) {
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i + 1][j];
+                }
+            }
+            // paso 2: mover columnas hacia la izquierda (todas las filas)
+            for (int i = 0; i < counter; i++) {
+                for (int j = index; j < counter - 1; j++) {
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i][j + 1];
+                }
+            }
+            // paso 3: decrementar y limpiar fila/columna sucia
             counter--;
+            vertexList[counter] = null;
+            for (int i = 0; i <= counter; i++) {
+                adjacencyMatrix[i][counter] = (T) Integer.valueOf(0);
+                adjacencyMatrix[counter][i] = (T) Integer.valueOf(0);
+            }
 
+            // limpiar listas enlazadas de vecinos
             for (int i = 0; i < counter; i++) {
                 Vertex<T> vertex = vertexList[i];
                 vertex.headNode = removeNeighborIfExists(vertex.headNode, element);
@@ -140,11 +163,19 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
             throw new GraphException("Adjacency List Graph Not Contains Vertex");
         if(!containsEdge(a, b))
             throw new GraphException("Adjacency List Graph Not Contains Edge");
+        // limpiar lista enlazada
         Vertex<T> vertexA = getVertex(a);
         vertexA.headNode = removeNeighborIfExists(vertexA.headNode, b);
         if(!directed) {
             Vertex<T> vertexB = getVertex(b);
             vertexB.headNode = removeNeighborIfExists(vertexB.headNode, a);
+        }
+        // limpiar matriz del padre
+        int i = indexOf(a);
+        int j = indexOf(b);
+        if(i != -1 && j != -1) {
+            adjacencyMatrix[i][j] = (T) Integer.valueOf(0);
+            if(!directed) adjacencyMatrix[j][i] = (T) Integer.valueOf(0);
         }
     }
 
@@ -170,12 +201,66 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
     }
 
     @Override
-    public String dfs() throws GraphException, model.Stack.StackException, ListException {
-        return super.dfs();
+    public String dfs() throws GraphException, StackException, ListException {
+        if(isEmpty()) throw new GraphException("Adjacency List Graph is Empty");
+        setVisitedAll(false);
+        StringBuilder info = new StringBuilder();
+        stack.clear();
+        // empieza desde el vértice 0
+        vertexList[0].setVisited(true);
+        info.append(vertexList[0].data).append(", ");
+        stack.push(0);
+        while(!stack.isEmpty()) {
+            int topIndex = (int) stack.top();
+            int nextIndex = adjacentNotVisitedByList(topIndex);
+            if(nextIndex == -1) {
+                stack.pop();
+            } else {
+                vertexList[nextIndex].setVisited(true);
+                info.append(vertexList[nextIndex].data).append(", ");
+                stack.push(nextIndex);
+            }
+        }
+        return info.toString();
     }
 
     @Override
-    public String bfs() throws GraphException, model.Queue.QueueException, ListException {
-        return super.bfs();
+    public String bfs() throws GraphException, QueueException, ListException {
+        if(isEmpty()) throw new GraphException("Adjacency List Graph is Empty");
+        setVisitedAll(false);
+        StringBuilder info = new StringBuilder();
+        queue.clear();
+        // empieza desde el vértice 0
+        vertexList[0].setVisited(true);
+        info.append(vertexList[0].data).append(", ");
+        queue.enQueue(0);
+        while(!queue.isEmpty()) {
+            int current = (int) queue.deQueue();
+            int nextIndex;
+            while((nextIndex = adjacentNotVisitedByList(current)) != -1) {
+                vertexList[nextIndex].setVisited(true);
+                info.append(vertexList[nextIndex].data).append(", ");
+                queue.enQueue(nextIndex);
+            }
+        }
+        return info.toString();
+    }
+
+    // busca el índice del primer vecino no visitado recorriendo la lista enlazada
+    private int adjacentNotVisitedByList(int index) {
+        Node<T> aux = vertexList[index].headNode;
+        while(aux != null) {
+            int neighborIndex = indexOf(aux.data);
+            if(neighborIndex != -1 && !vertexList[neighborIndex].isVisited())
+                return neighborIndex;
+            aux = aux.neighbor;
+        }
+        return -1;
+    }
+
+    // marca todos los vértices como visitados o no visitados
+    private void setVisitedAll(boolean value) {
+        for(int i = 0; i < counter; i++)
+            vertexList[i].setVisited(value);
     }
 }

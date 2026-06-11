@@ -9,7 +9,7 @@ import model.Stack.StackException;
 public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
     public int n; //tam máximo de la matriz
     public Vertex<T>[] vertexList; //arreglo estático de objetos tipo Vertex
-    private T[][] adjacencyMatrix; //arreglo multidimensional tipo matriz
+    protected T[][] adjacencyMatrix; //arreglo multidimensional tipo matriz
     public int counter; //contador de vértices agregados
     public final boolean directed; //true si el grafo es dirigido
 
@@ -120,31 +120,26 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
 
     @Override
     public void removeVertex(T element) throws GraphException, ListException {
-        int index = indexOf(element); //devuelve el índice del vértice a eliminar
-        if(index!=-1){ //si el vértice existe en la lista de vértices
-            for (int i = index; i < counter-1; i++) {
-                vertexList[i] = vertexList[i+1];
-
-                //ahora hacemos lo mismo en la matriz con las filas, columnas
-                //es decir, eliminamos las aristas
-                //primero movemos todas las filas, una pos hacia arriba
+        int index = indexOf(element);
+        if(index != -1) {
+            // paso 1: mover filas una posición hacia arriba (todas las columnas)
+            for (int i = index; i < counter - 1; i++) {
+                vertexList[i] = vertexList[i + 1];
                 for (int j = 0; j < counter; j++) {
-                    adjacencyMatrix[i][j] = adjacencyMatrix[i+1][j];
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i + 1][j];
                 }
             }
-            //luego movemos todas las cols una pos a la izq
+            // paso 2: mover columnas una posición hacia la izquierda (todas las filas)
             for (int i = 0; i < counter; i++) {
-                for (int j = index; j < counter-1; j++)
-                    adjacencyMatrix[i][j] = adjacencyMatrix[i][j+1];
+                for (int j = index; j < counter - 1; j++) {
+                    adjacencyMatrix[i][j] = adjacencyMatrix[i][j + 1];
+                }
             }
-            //al final se debe decrementar el contador de vértices existente
-            //eliminamos los datos "sucios" de la lista de vértices y la matriz
-            vertexList[counter] = null;
+            // paso 3: decrementar y limpiar la última fila/columna "sucia"
             counter--;
-            for (int i = 0; i < counter; i++) {
-                //cambia las filas y la col es la ult (columna "sucia")
+            vertexList[counter] = null;
+            for (int i = 0; i <= counter; i++) {
                 adjacencyMatrix[i][counter] = (T) Integer.valueOf(0);
-                //cambia las cols y la fila es la ult (fila "sucia")
                 adjacencyMatrix[counter][i] = (T) Integer.valueOf(0);
             }
         }
@@ -279,3 +274,4 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
         return null; //no existe el vertice
     }
 }
+
