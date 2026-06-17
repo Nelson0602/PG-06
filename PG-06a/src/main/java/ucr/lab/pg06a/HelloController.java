@@ -1,4 +1,4 @@
-package controller;
+package ucr.lab.pg06a;
 
 
 import javafx.animation.KeyFrame;
@@ -144,10 +144,11 @@ public class HelloController implements Initializable {
     // ════════════════════════════════════════════════════════════════════════
 
     @FXML void onMatGenerate() {
-        int n = matSpinner.getValue();
-        boolean dir = matDirCheck.isSelected();
-        matGraph = new AdjacencyMatrixGraph<>(n, dir);
         try {
+            Integer nVal = matSpinner.getValue();
+            int n = (nVal != null) ? nVal : 6;
+            boolean dir = matDirCheck.isSelected();
+            matGraph = new AdjacencyMatrixGraph<>(n, dir);
             for (int i = 0; i < n; i++) matGraph.addVertex(i);
             parseAndAddEdges(matEdgesArea.getText(), matGraph, false);
             drawGraph(matCanvas, matGraph, n, false);
@@ -182,7 +183,7 @@ public class HelloController implements Initializable {
         for (int i = 0; i < n; i++) {
             matrixGrid.add(styledLabel(nameOf(i), "#8b949e", true), 0, i + 1);
             for (int j = 0; j < n; j++) {
-                Object val = g.adjacencyMatrix[i][j];
+                Object val = getCell(g, i, j);
                 boolean edge = !val.equals(0);
                 Label cell = styledLabel(val.toString(), edge ? "white" : "#4a5568", false);
                 cell.setStyle(cell.getStyle() + (edge
@@ -202,7 +203,7 @@ public class HelloController implements Initializable {
         sb.append("\n");
         for (int i = 0; i < n; i++) {
             sb.append(String.format("%-5s", nameOf(i)));
-            for (int j = 0; j < n; j++) sb.append(String.format("%-4s", g.adjacencyMatrix[i][j]));
+            for (int j = 0; j < n; j++) sb.append(String.format("%-4s", getCell(g, i, j)));
             sb.append("\n");
         }
         try {
@@ -217,7 +218,7 @@ public class HelloController implements Initializable {
                 sb.append(nameOf(i)).append(": ");
                 boolean any = false;
                 for (int j = 0; j < n; j++) {
-                    if (!g.adjacencyMatrix[i][j].equals(0)) { sb.append(nameOf(j)).append(" "); any = true; }
+                    if (!getCell(g, i, j).equals(0)) { sb.append(nameOf(j)).append(" "); any = true; }
                 }
                 if (!any) sb.append("(sin vecinos)");
                 sb.append("\n");
@@ -232,10 +233,11 @@ public class HelloController implements Initializable {
     // ════════════════════════════════════════════════════════════════════════
 
     @FXML void onLstGenerate() {
-        int n = lstSpinner.getValue();
-        boolean dir = lstDirCheck.isSelected();
-        lstGraph = new AdjacencyListGraph<>(n, dir);
         try {
+            Integer nVal = lstSpinner.getValue();
+            int n = (nVal != null) ? nVal : 6;
+            boolean dir = lstDirCheck.isSelected();
+            lstGraph = new AdjacencyListGraph<>(n, dir);
             for (int i = 0; i < n; i++) lstGraph.addVertex(i);
             parseAndAddEdges(lstEdgesArea.getText(), lstGraph, false);
             drawGraph(lstCanvas, lstGraph, n, false);
@@ -291,10 +293,11 @@ public class HelloController implements Initializable {
     // ════════════════════════════════════════════════════════════════════════
 
     @FXML void onLnkGenerate() {
-        int n = lnkSpinner.getValue();
-        boolean dir = lnkDirCheck.isSelected();
-        lnkGraph = new LinkedGraph<>(dir);
         try {
+            Integer nVal = lnkSpinner.getValue();
+            int n = (nVal != null) ? nVal : 6;
+            boolean dir = lnkDirCheck.isSelected();
+            lnkGraph = new LinkedGraph<>(dir);
             for (int i = 0; i < n; i++) lnkGraph.addVertex(i);
             parseAndAddEdges(lnkEdgesArea.getText(), lnkGraph, false);
             drawGraph(lnkCanvas, lnkGraph, n, true);
@@ -395,10 +398,10 @@ public class HelloController implements Initializable {
         gc.setLineWidth(1.5);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (!g.adjacencyMatrix[i][j].equals(0)) {
+                if (!getCell(g, i, j).equals(0)) {
                     drawEdge(gc, pos[i][0], pos[i][1], pos[j][0], pos[j][1], g.directed, NR);
                     // peso si no es 0 ni 1
-                    Object w2 = g.adjacencyMatrix[i][j];
+                    Object w2 = getCell(g, i, j);
                     if (!w2.equals(0) && !w2.equals(1)) {
                         double mx = (pos[i][0] + pos[j][0]) / 2;
                         double my = (pos[i][1] + pos[j][1]) / 2;
@@ -790,6 +793,11 @@ public class HelloController implements Initializable {
     // ════════════════════════════════════════════════════════════════════════
     //  UTILIDADES
     // ════════════════════════════════════════════════════════════════════════
+
+    private Object getCell(AdjacencyMatrixGraph<Integer> g, int i, int j) {
+        Object[][] raw = (Object[][]) g.adjacencyMatrix;
+        return raw[i][j];
+    }
 
     private double[][] calcCirclePos(int n, double cx, double cy, double r) {
         double[][] pos = new double[n][2];

@@ -5,7 +5,8 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.HelloController"
+            fx:controller="ucr.lab.pg06a.HelloController"
+            stylesheets="@styles.css"
             style="-fx-background-color:#0d1117;">
 
     <!-- Header -->
@@ -33,8 +34,12 @@
                     <VBox spacing="10" style="-fx-background-color:#0d1117; -fx-padding:12;">
                         <Label text="⚙ Configurar Grafo" style="-fx-text-fill:#58a6ff; -fx-font-weight:bold;"/>
                         <Label text="Número de vértices (2-12):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>
-                        <Spinner fx:id="matSpinner" min="2" max="12" initialValue="6"
-                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;"/>
+                        <Spinner fx:id="matSpinner" editable="false"
+                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;">
+                            <valueFactory>
+                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="2" max="12" initialValue="6"/>
+                            </valueFactory>
+                        </Spinner>
                         <CheckBox fx:id="matDirCheck" text="Grafo Dirigido"
                                   style="-fx-text-fill:#c9d1d9;" selected="true"/>
                         <Label text="Aristas (formato: u-v, separadas por coma):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>
@@ -101,8 +106,12 @@
                     <VBox spacing="10" style="-fx-background-color:#0d1117; -fx-padding:12;">
                         <Label text="⚙ Configurar Grafo" style="-fx-text-fill:#58a6ff; -fx-font-weight:bold;"/>
                         <Label text="Número de vértices (2-12):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>
-                        <Spinner fx:id="lstSpinner" min="2" max="12" initialValue="6"
-                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;"/>
+                        <Spinner fx:id="lstSpinner" editable="false"
+                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;">
+                            <valueFactory>
+                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="2" max="12" initialValue="6"/>
+                            </valueFactory>
+                        </Spinner>
                         <CheckBox fx:id="lstDirCheck" text="Grafo Dirigido"
                                   style="-fx-text-fill:#c9d1d9;" selected="true"/>
                         <Label text="Aristas (formato: u-v, separadas por coma):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>
@@ -145,8 +154,12 @@
                     <VBox spacing="10" style="-fx-background-color:#0d1117; -fx-padding:12;">
                         <Label text="⚙ Configurar Grafo" style="-fx-text-fill:#58a6ff; -fx-font-weight:bold;"/>
                         <Label text="Número de vértices (2-12):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>
-                        <Spinner fx:id="lnkSpinner" min="2" max="12" initialValue="6"
-                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;"/>
+                        <Spinner fx:id="lnkSpinner" editable="false"
+                                 style="-fx-background-color:#161b22; -fx-text-fill:white; -fx-pref-width:120;">
+                            <valueFactory>
+                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="2" max="12" initialValue="6"/>
+                            </valueFactory>
+                        </Spinner>
                         <CheckBox fx:id="lnkDirCheck" text="Grafo Dirigido"
                                   style="-fx-text-fill:#c9d1d9;" selected="true"/>
                         <Label text="Aristas (formato: u-v, separadas por coma):" style="-fx-text-fill:#c9d1d9; -fx-font-size:11;"/>

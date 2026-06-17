@@ -4,7 +4,4 @@ module ucr.lab.pg06a {
 
     opens ucr.lab.pg06a to javafx.fxml;
     exports ucr.lab.pg06a;
-
-    exports controller;
-    opens controller to javafx.fxml;
 }
