@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ucr.lab.pg06a.HelloController"
+            fx:controller="controller.HelloController"
             style="-fx-background-color:#0d1117;">
 
     <!-- Header -->
