@@ -40,6 +40,9 @@ public interface Graph<T> {
     public String dfs()throws GraphException, StackException, ListException;  
     // recorre el grafo utilizando el algoritmo de búsqueda en amplitud
     // breadth-first search
-    public String bfs()throws GraphException, QueueException, ListException;  
+    public String bfs()throws GraphException, QueueException, ListException;
+    public int getVertexDegree(T element) throws GraphException, ListException;
+    public int getGraphDegree() throws GraphException, ListException;
+    public int totalEdges() throws GraphException, ListException;
 
 }

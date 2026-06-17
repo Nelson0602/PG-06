@@ -265,4 +265,54 @@ public class LinkedGraph<T extends Comparable<T>> extends LinkedList<T> implemen
     public int compareElements(T a, T b) {
         return a.compareTo(b);
     }
+
+    @Override
+    public int getVertexDegree(T element) throws GraphException, ListException {
+        if (!containsVertex(element)) throw new GraphException("Vertex not found");
+        Node<T> node = getNode(element);
+        int degree = 0;
+        Node<T> aux = node.neighbor;
+        while (aux != null) { degree++; aux = aux.neighbor; }
+        if (directed) {
+            int len = size();
+            for (int i = 1; i <= len; i++) {
+                Node<T> n = getNodeByIndex(i);
+                if (n != null && !equals(n.data, element)) {
+                    Node<T> nb = n.neighbor;
+                    while (nb != null) {
+                        if (equals(nb.data, element)) { degree++; break; }
+                        nb = nb.neighbor;
+                    }
+                }
+            }
+        }
+        return degree;
+    }
+
+    @Override
+    public int getGraphDegree() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Linked Graph is Empty");
+        int max = 0;
+        int len = size();
+        for (int i = 1; i <= len; i++) {
+            Node<T> n = getNodeByIndex(i);
+            if (n != null) {
+                int d = getVertexDegree(n.data);
+                if (d > max) max = d;
+            }
+        }
+        return max;
+    }
+
+    @Override
+    public int totalEdges() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Linked Graph is Empty");
+        int count = 0;
+        int len = size();
+        for (int i = 1; i <= len; i++) {
+            Node<T> aux = getNodeByIndex(i).neighbor;
+            while (aux != null) { count++; aux = aux.neighbor; }
+        }
+        return directed ? count : count / 2;
+    }
 }

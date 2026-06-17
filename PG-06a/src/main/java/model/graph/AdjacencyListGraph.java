@@ -47,7 +47,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
                 Vertex<T> vertexB = getVertex(b);
                 vertexB.headNode = addNeighbor(vertexB.headNode, a, null);
             }
-            // llenar la matriz del padre para que dfs/bfs/printMatrix funcionen
             adjacencyMatrix[indexOf(a)][indexOf(b)] = (T) Integer.valueOf(1);
             if(!directed) adjacencyMatrix[indexOf(b)][indexOf(a)] = (T) Integer.valueOf(1);
         }
@@ -99,7 +98,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
                 Vertex<T> vertexB = getVertex(b);
                 vertexB.headNode = addNeighbor(vertexB.headNode, a, weight);
             }
-            // llenar la matriz del padre para que dfs/bfs/printMatrix funcionen
             adjacencyMatrix[indexOf(a)][indexOf(b)] = weight;
             if(!directed) adjacencyMatrix[indexOf(b)][indexOf(a)] = weight;
         }
@@ -111,20 +109,17 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
             throw new GraphException("Adjacency List Graph Not Contains Vertex");
         int index = indexOf(element);
         if(index != -1) {
-            // paso 1: mover filas hacia arriba (todas las columnas)
             for (int i = index; i < counter - 1; i++) {
                 vertexList[i] = vertexList[i + 1];
                 for (int j = 0; j < counter; j++) {
                     adjacencyMatrix[i][j] = adjacencyMatrix[i + 1][j];
                 }
             }
-            // paso 2: mover columnas hacia la izquierda (todas las filas)
             for (int i = 0; i < counter; i++) {
                 for (int j = index; j < counter - 1; j++) {
                     adjacencyMatrix[i][j] = adjacencyMatrix[i][j + 1];
                 }
             }
-            // paso 3: decrementar y limpiar fila/columna sucia
             counter--;
             vertexList[counter] = null;
             for (int i = 0; i <= counter; i++) {
@@ -132,7 +127,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
                 adjacencyMatrix[counter][i] = (T) Integer.valueOf(0);
             }
 
-            // limpiar listas enlazadas de vecinos
             for (int i = 0; i < counter; i++) {
                 Vertex<T> vertex = vertexList[i];
                 vertex.headNode = removeNeighborIfExists(vertex.headNode, element);
@@ -142,15 +136,13 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
 
     private Node<T> removeNeighborIfExists(Node<T> headNode, T element) {
         if(headNode == null) return null;
-        // Caso 1: el primer nodo es el que hay que eliminar
         if(equals(headNode.data, element))
             return headNode.neighbor;
-        // Caso 2: está en medio o al final
         Node<T> prev = headNode;
         while(prev.neighbor != null){
             if(equals(prev.neighbor.data, element)){
                 prev.neighbor = prev.neighbor.neighbor;
-                break; // solo hay una arista por par de vértices
+                break;
             }
             prev = prev.neighbor;
         }
@@ -163,14 +155,12 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
             throw new GraphException("Adjacency List Graph Not Contains Vertex");
         if(!containsEdge(a, b))
             throw new GraphException("Adjacency List Graph Not Contains Edge");
-        // limpiar lista enlazada
         Vertex<T> vertexA = getVertex(a);
         vertexA.headNode = removeNeighborIfExists(vertexA.headNode, b);
         if(!directed) {
             Vertex<T> vertexB = getVertex(b);
             vertexB.headNode = removeNeighborIfExists(vertexB.headNode, a);
         }
-        // limpiar matriz del padre
         int i = indexOf(a);
         int j = indexOf(b);
         if(i != -1 && j != -1) {
@@ -206,7 +196,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
         setVisitedAll(false);
         StringBuilder info = new StringBuilder();
         stack.clear();
-        // empieza desde el vértice 0
         vertexList[0].setVisited(true);
         info.append(vertexList[0].data).append(", ");
         stack.push(0);
@@ -230,7 +219,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
         setVisitedAll(false);
         StringBuilder info = new StringBuilder();
         queue.clear();
-        // empieza desde el vértice 0
         vertexList[0].setVisited(true);
         info.append(vertexList[0].data).append(", ");
         queue.enQueue(0);
@@ -246,7 +234,6 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
         return info.toString();
     }
 
-    // busca el índice del primer vecino no visitado recorriendo la lista enlazada
     private int adjacentNotVisitedByList(int index) {
         Node<T> aux = vertexList[index].headNode;
         while(aux != null) {
@@ -258,9 +245,48 @@ public class AdjacencyListGraph<T extends Comparable<T>> extends AdjacencyMatrix
         return -1;
     }
 
-    // marca todos los vértices como visitados o no visitados
     private void setVisitedAll(boolean value) {
         for(int i = 0; i < counter; i++)
             vertexList[i].setVisited(value);
+    }
+
+    @Override
+    public int getVertexDegree(T element) throws GraphException, ListException {
+        if (!containsVertex(element)) throw new GraphException("Vertex not found");
+        Vertex<T> v = getVertex(element);
+        int degree = 0;
+        Node<T> aux = v.headNode;
+        while (aux != null) { degree++; aux = aux.neighbor; }
+        if (directed) {
+            for (int i = 0; i < counter; i++) {
+                if (!equals(vertexList[i].data, element)) {
+                    Node<T> n = getNodeNeighbor(vertexList[i].headNode, element);
+                    if (n != null) degree++;
+                }
+            }
+        }
+        return degree;
+    }
+
+    @Override
+    public int getGraphDegree() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Adjacency List Graph is Empty");
+        int max = 0;
+        for (int i = 0; i < counter; i++) {
+            int d = getVertexDegree(vertexList[i].data);
+            if (d > max) max = d;
+        }
+        return max;
+    }
+
+    @Override
+    public int totalEdges() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Adjacency List Graph is Empty");
+        int count = 0;
+        for (int i = 0; i < counter; i++) {
+            Node<T> aux = vertexList[i].headNode;
+            while (aux != null) { count++; aux = aux.neighbor; }
+        }
+        return directed ? count : count / 2;
     }
 }

@@ -9,7 +9,7 @@ import model.Stack.StackException;
 public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
     public int n; //tam máximo de la matriz
     public Vertex<T>[] vertexList; //arreglo estático de objetos tipo Vertex
-    protected T[][] adjacencyMatrix; //arreglo multidimensional tipo matriz
+    public T[][] adjacencyMatrix; //arreglo multidimensional tipo matriz
     public int counter; //contador de vértices agregados
     public final boolean directed; //true si el grafo es dirigido
 
@@ -272,6 +272,44 @@ public class AdjacencyMatrixGraph<T extends Comparable<T>> implements Graph<T> {
         for (int i = 0; i < counter; i++)
             if(i==index) return this.vertexList[i];
         return null; //no existe el vertice
+    }
+
+    @Override
+    public int getVertexDegree(T element) throws GraphException, ListException {
+        if (!containsVertex(element)) throw new GraphException("Vertex not found");
+        int index = indexOf(element);
+        int degree = 0;
+        for (int j = 0; j < counter; j++) {
+            if (!adjacencyMatrix[index][j].equals(0)) degree++;
+        }
+        if (!directed) return degree;
+        // dirigido: grado = salida + entrada
+        for (int i = 0; i < counter; i++) {
+            if (i != index && !adjacencyMatrix[i][index].equals(0)) degree++;
+        }
+        return degree;
+    }
+
+    @Override
+    public int getGraphDegree() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Adjacency Matrix Graph is Empty");
+        int max = 0;
+        for (int i = 0; i < counter; i++) {
+            int d = getVertexDegree(vertexList[i].data);
+            if (d > max) max = d;
+        }
+        return max;
+    }
+
+    @Override
+    public int totalEdges() throws GraphException, ListException {
+        if (isEmpty()) throw new GraphException("Adjacency Matrix Graph is Empty");
+        int count = 0;
+        for (int i = 0; i < counter; i++)
+            for (int j = 0; j < counter; j++)
+                if (!adjacencyMatrix[i][j].equals(0)) count++;
+        // no dirigido: cada arista se cuenta dos veces
+        return directed ? count : count / 2;
     }
 }
 
